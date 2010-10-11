@@ -1,0 +1,11 @@
+name: Kieken
+description: Example plugin for demonstrating hook system
+
+author: Justin van Wees
+authorEmail: justin@vwees.net
+authorUrl: http://justinvanwees.nl
+
+dependencies:
+  plugins:
+    - acl
+    - extensions

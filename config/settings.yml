@@ -1,0 +1,13 @@
+---
+Kieken.uploadDirectory: kieken/
+Kieken.keepOriginal: 1
+Kieken.thumbnails:
+    - thumbName: small
+      resizeMethod: normal
+      width: 150
+      height: 150
+    - thumbName: medium
+      resizeMethod: adaptive
+      width: 200
+      height: 300
+    
