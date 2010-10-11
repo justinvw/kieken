@@ -59,7 +59,7 @@
 			$actions .= ' '.$html->link(__('Delete', true), array('action' => 'delete', $album['KiekenAlbum']['id']), array('class' => 'delete', 'id' => $album['KiekenAlbum']['id']));
 			
 			$rows[] = array(
-				'',
+				$html->image(DS.Configure::read('Kieken.uploadDirectory').$album['KiekenThumbnail']['KiekenFile']['small']['filename'], array('width' => '100px')),
 				$album['KiekenAlbum']['id'],
 				$html->link($album['KiekenAlbum']['title'], array('action' => 'view', $album['KiekenAlbum']['id'])),
 				$album['KiekenAlbum']['excerpt'],

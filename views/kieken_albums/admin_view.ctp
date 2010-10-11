@@ -2,6 +2,23 @@
 	echo $html->script('/kieken/js/jeditable.js', array('inline' => false));
 ?>
 <script type="text/javascript" charset="utf-8">
+	function setAsAlbumThumbnail(id, album_id){
+		options = {
+			'data': {
+				'id': album_id,
+				'thumbnail_picture_id': id
+			}	
+		}
+		$.ajax({
+			url: Croogo.basePath + 'admin/kieken/kieken_albums/edit',
+			data: $.param(options),
+			type: 'POST',
+			success: function (j) {
+				
+			}
+		});
+	}
+	
 	function removePicture(id, album_id){
 		$('#dialog-confirm').dialog({
 			resizable: false,
@@ -33,6 +50,11 @@
 			return false;
 		});
 		
+		$('a.setasalbumthumbnail').click(function(){
+			setAsAlbumThumbnail($(this).attr('id'), <?php echo $album['KiekenAlbum']['id']; ?>);
+			return false;
+		});
+				
 		$('.edit_title').editable(Croogo.basePath + 'admin/kieken/kieken_pictures/edit', { 
 			type: 'text',
 			cancel: 'Cancel',
@@ -93,7 +115,11 @@
 											$picture['id'], 
 											'all'), 
 										array('class' => 'delete', 'id' => $picture['id'])); ?></li>
-								<li>Use as thumbnail for this album</li>
+								<li><?php echo $html->link(__('Use as thumbnail for this album', true), array(
+											'controller' => 'kieken_pictures',
+											'action' => 'edit',
+											$album['KiekenAlbum']['id']),
+										array('class' => 'setasalbumthumbnail', 'id' => $picture['id'])); ?></li>
 							<ul>
 						</td>
 				<?

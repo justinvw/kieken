@@ -35,7 +35,7 @@ class KiekenAlbum extends KiekenAppModel {
 			'foreignKey' => 'user_id',
 			'dependent' => false
 		),
-		'Thumbnail' => array(
+		'KiekenThumbnail' => array(
 			'className' => 'Kieken.KiekenPicture',
 			'foreignKey' => 'thumbnail_picture_id',
 			'dependent' => false

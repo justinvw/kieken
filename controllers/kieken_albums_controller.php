@@ -3,12 +3,28 @@ class KiekenAlbumsController extends KiekenAppController {
 	var $name = 'KiekenAlbums';
 	var $uses = array('Kieken.KiekenAlbum');
 	
+	function beforeFilter(){
+		parent::beforeFilter();
+		// CSRF Protection
+        if (in_array($this->params['action'], array('admin_add', 'admin_edit'))) {
+            $this->Security->validatePost = false;
+        }
+	}
+	
 	function admin_index() {
 		$this->set('title_for_layout', sprintf(__('Albums', true)));
 		
-		$this->KiekenAlbum->recursive = 0;
-
+		$this->KiekenAlbum->recursive = 3;
+		$this->KiekenAlbum->KiekenThumbnail->unbindModel(array('hasAndBelongsToMany' => array('KiekenAlbum')), false);
+		$this->KiekenAlbum->unbindModel(
+			array('hasAndBelongsToMany' => array('KiekenPicture')), false
+		);
+		
 		$albums = $this->paginate('KiekenAlbum');
+		foreach($albums as $albumKey => $album) {
+			$albums[$albumKey]['KiekenThumbnail']['KiekenFile'] = Set::combine($album['KiekenThumbnail']['KiekenFile'], '{n}.thumbname', '{n}');
+		}
+		
 		$this->set(compact('albums'));
 	}
 	
@@ -55,33 +71,47 @@ class KiekenAlbumsController extends KiekenAppController {
 	}
 	
 	function admin_edit($id = null) {
-		if(!$id) {
-			$this->Session->setFlash(__('Invalid content', true));
-			$this->redirect(array('action' => 'index'));
-		}
-		
-		$album = $this->KiekenAlbum->findById($id);
-		if(!$album) {
-			$this->Session->setFlash(__('Album does not exist.', true));
-            $this->redirect(array('action' => 'index'));
-		}
-		
-		$this->set('title_for_layout', sprintf(__('Edit album: %s', true), $album['KiekenAlbum']['title']));
-		
-		if(!empty($this->data)) {
-			$this->KiekenAlbum->id = $id;
+		if($this->RequestHandler->isAjax()) {
+			Configure::write('debug', 0);
+			$this->autoRender = false;
+			
 			if($this->KiekenAlbum->save($this->data)) {
-				$this->Session->setFlash(sprintf(__('%s has been saved', true), $album['KiekenAlbum']['title']));
-                $this->redirect(array('action' => 'index'));
+				echo json_encode(array('result' => 'success'));
 			}
 			else {
-				$this->Session->setFlash(sprintf(__('%s could not be saved. Please, try again.', true), $album['KiekenAlbum']['title']));
+				echo json_encode(array('result' => 'failed'));
 			}
 		}
+		else {
+			if(!$id) {
+				$this->Session->setFlash(__('Invalid content', true));
+				$this->redirect(array('action' => 'index'));
+			}
 		
-		$this->data = $album;
-		$albums = $this->KiekenAlbum->generatetreelist();
-		$this->set(compact('albums'));
+			$album = $this->KiekenAlbum->findById($id);
+			if(!$album) {
+				$this->Session->setFlash(__('Album does not exist.', true));
+	            $this->redirect(array('action' => 'index'));
+			}
+		
+			$this->set('title_for_layout', sprintf(__('Edit album: %s', true), $album['KiekenAlbum']['title']));
+		
+			if(!empty($this->data)) {
+				$this->KiekenAlbum->id = $id;
+				if($this->KiekenAlbum->save($this->data)) {
+					$this->Session->setFlash(sprintf(__('%s has been saved', true), $album['KiekenAlbum']['title']));
+	                $this->redirect(array('action' => 'view', $id));
+				}
+				else {
+					$this->Session->setFlash(sprintf(__('%s could not be saved. Please, try again.', true), $album['KiekenAlbum']['title']));
+				}
+			}
+		
+		
+			$this->data = $album;
+			$albums = $this->KiekenAlbum->generatetreelist();
+			$this->set(compact('albums'));
+		}
 	}
 	
 	function admin_delete($id = null, $scope = null) {
