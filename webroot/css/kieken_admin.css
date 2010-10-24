@@ -1,0 +1,30 @@
+/* @override http://localhost/kieken/webroot/kieken/css/kieken_admin.css */
+
+.kieken .editable {
+	padding: 1px 3px;
+	cursor: pointer;
+}
+
+.kieken .editable:hover {
+	background: #fffcc3;
+}
+
+.kieken .editable form input {
+	padding: 3px 6px;
+}
+
+.kieken .editable.no_description {
+	color: #b5b5b4;	
+}
+
+.kieken #album_photos table, .kieken #album_photos table td {
+	vertical-align: top;
+	border: none;
+	background: none;
+}
+
+.kieken #album_photos ul.actions li {
+	float: left;
+	font-size: 11px;
+	padding: 5px 10px 5px 0;
+}

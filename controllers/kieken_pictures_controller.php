@@ -3,6 +3,13 @@ class KiekenPicturesController extends KiekenAppController {
 	var $name = 'KiekenPictures';
 	var $uses = array('Kieken.KiekenPicture');
 	
+	function beforeFilter(){
+		parent::beforeFilter();
+		// CSRF Protection
+        if (in_array($this->params['action'], array('admin_edit'))) {
+            $this->Security->validatePost = false;
+        }
+	}
 	
 	function admin_index() {
 		
@@ -98,16 +105,30 @@ class KiekenPicturesController extends KiekenAppController {
 		echo json_encode(array('success' => true));
 	}
 	
-	function admin_edit() {
+	function admin_edit($id = null) {
 		if($this->RequestHandler->isAjax()) {
 			Configure::write('debug', 0);
-			$this->autoRender = false;
 		}
-				
-		$this->KiekenPicture->id = $this->params['form']['id'];
-		$this->data['KiekenPicture'][$this->params['form']['edit']] = $this->params['form'][$this->params['form']['edit']];
-		if($this->KiekenPicture->save($this->data)){
-			echo $this->params['form'][$this->params['form']['edit']];
+		
+		if(empty($this->data)){
+			$albums = $this->KiekenPicture->KiekenAlbum->generatetreelist();
+			$picture = $this->KiekenPicture->findById($id);
+			$picture['KiekenFile'] = Set::combine($picture['KiekenFile'], '{n}.thumbname', '{n}');
+			$picture['KiekenAlbum'] = Set::combine($picture['KiekenAlbum'], '{n}.id', '{n}');
+			
+			$this->data = $picture;
+			$this->set(compact('picture', 'albums'));
+		}
+		else {
+			debug($this->data);
+			$this->KiekenPicture->id = $this->data['KiekenPicture']['id'];
+			if($this->KiekenPicture->save($this->data)){
+				if($this->RequestHandler->isAjax()){
+					$this->autoRender = false;
+					$this->RequestHandler->respondAs('text/x-json');
+					echo json_encode($this->data);
+				}
+			}
 		}
 	}
 	
@@ -120,7 +141,7 @@ class KiekenPicturesController extends KiekenAppController {
 		$picture = $this->KiekenPicture->findById($id);
 		debug($picture);
 
-		# Delete picture and references to all albums
+		# Delete picture and references from all albums
 		if($scope == 'all'){
 			if($this->KiekenPicture->delete($id, true)){
 				# Delete files from disk
@@ -139,7 +160,7 @@ class KiekenPicturesController extends KiekenAppController {
 			}
 		}
 		
-		# Delete picture references from all albums, but keep the file itself
+		# Delete picture references from all albums, but keep the picture itself
 		else {
 			if($this->KiekenPicture->KiekenAlbumsPicture->deleteAll(array('KiekenAlbumsPicture.picture_id' => $id))){
 				
