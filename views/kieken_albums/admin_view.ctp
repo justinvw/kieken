@@ -52,7 +52,7 @@
 					window.location = Croogo.basePath + 'admin/kieken/kieken_pictures/delete/' + id + '/albums/' + album_id;
 				},
 				'Entirely delete' : function (){
-					window.location = Croogo.basePath + 'admin/kieken/kieken_pictures/delete/' + id + 'all/' + album_id;
+					window.location = Croogo.basePath + 'admin/kieken/kieken_pictures/delete/' + id + '/all/' + album_id;
 				},
 				'Cancel' : function (){
 					$(this).dialog('close');
@@ -92,8 +92,15 @@
 			return false;
 		});
 		
-		$('a.setasalbumthumbnail').click(function(){
+		$('a.setasalbumthumbnail').live('click', function(){
 			setAsAlbumThumbnail($(this).attr('id'), <?php echo $album['KiekenAlbum']['id']; ?>);
+			
+			// Remove 'isalbumthumbnail' class fromString current thumbnail
+			$('a.isalbumthumbnail').removeClass('isalbumthumbnail').addClass('setasalbumthumbnail');
+
+			// Remove 'setasalbumthumbnail' class and add 'isalbumthumbnail' class from the clicked link
+			$(this).removeClass('setasalbumthumbnail');
+			$(this).addClass('isalbumthumbnail');
 			return false;
 		});
 		
@@ -172,11 +179,19 @@
 											$picture['id'], 
 											'all'), 
 										array('class' => 'delete', 'id' => $picture['id'])); ?></li>
+								<?php 
+									if($picture['id'] == $album['KiekenAlbum']['thumbnail_picture_id']){
+										$class = 'isalbumthumbnail';
+									}
+									else {
+										$class = 'setasalbumthumbnail';
+									}
+								?>
 								<li><?php echo $html->link(__('Use as album\'s thumbnail', true), array(
 											'controller' => 'kieken_pictures',
 											'action' => 'edit',
 											$album['KiekenAlbum']['id']),
-										array('class' => 'setasalbumthumbnail', 'id' => $picture['id'])); ?></li>
+										array('class' => $class, 'id' => $picture['id'])); ?></li>
 							<ul>
 						</td>
 				<?
