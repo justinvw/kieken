@@ -46,13 +46,17 @@
 			draggable: false,
 			buttons: {
 				'Remove from this album' : function(){
-					window.location = Croogo.basePath + 'admin/kieken/kieken_pictures/delete/' + id + '/album/' + album_id;
+					$.get(Croogo.basePath + 'admin/kieken/kieken_pictures/delete/' + id + '/album/' + album_id);
+					$(this).dialog('close');
+					$('td#' + id).fadeOut();
 				},
 				'Remove from all albums' : function(){
-					window.location = Croogo.basePath + 'admin/kieken/kieken_pictures/delete/' + id + '/albums/' + album_id;
+					$.get(Croogo.basePath + 'admin/kieken/kieken_pictures/delete/' + id + '/albums/' + album_id);
+					$('td#' + id).fadeOut();
 				},
 				'Entirely delete' : function (){
-					window.location = Croogo.basePath + 'admin/kieken/kieken_pictures/delete/' + id + '/all/' + album_id;
+					$.get(Croogo.basePath + 'admin/kieken/kieken_pictures/delete/' + id + '/all/' + album_id);
+					$('td#' + id).fadeOut();
 				},
 				'Cancel' : function (){
 					$(this).dialog('close');
@@ -67,6 +71,7 @@
 		$(dialog).dialog({
 			resizable: false,
 			height: 'auto',
+			position: 'center',
 			width: '780px',
 			modal: true,
 			draggable: false,
@@ -76,6 +81,7 @@
 					type: 'GET',
 					success: function (j) {
 						$(dialog).html(j);
+						$(dialog).dialog('option', 'position', 'center');
 					}
 				});
 			},
@@ -88,12 +94,12 @@
 	
 	$(document).ready(function() {
 		$('a.delete').click(function(){
-			removePicture($(this).attr('id'), <?php echo $album['KiekenAlbum']['id']; ?>);
+			removePicture($(this).parent('li').parent('ul').parent('td').attr('id'), <?php echo $album['KiekenAlbum']['id']; ?>);
 			return false;
 		});
 		
 		$('a.setasalbumthumbnail').live('click', function(){
-			setAsAlbumThumbnail($(this).attr('id'), <?php echo $album['KiekenAlbum']['id']; ?>);
+			setAsAlbumThumbnail($(this).parent('li').parent('ul').parent('td').attr('id'), <?php echo $album['KiekenAlbum']['id']; ?>);
 			
 			// Remove 'isalbumthumbnail' class fromString current thumbnail
 			$('a.isalbumthumbnail').removeClass('isalbumthumbnail').addClass('setasalbumthumbnail');
@@ -105,13 +111,13 @@
 		});
 		
 		$('img.thumbnail').click(function(){
-			showImageDetails($(this).attr('id'));
+			showImageDetails($(this).parent('td').attr('id'));
 			return false;
 		});
 		
 		$('.edit_title').editable(function(value, settings){
 			$(this).html(settings.indicator);
-			returnvalue = editPictureDetails({'KiekenPicture': {'id': this.id, 'title': value}});
+			returnvalue = editPictureDetails({'KiekenPicture': {'id': $(this).parent('td').attr('id'), 'title': value}});
 			return returnvalue['KiekenPicture']['title'];
 		}, {
 			type: 'text',
@@ -122,7 +128,7 @@
 		
 		$('.edit_description').editable(function(value, settings){
 			$(this).html(settings.indicator);
-			returnvalue = editPictureDetails({'KiekenPicture': {'id': this.id, 'description': value}})
+			returnvalue = editPictureDetails({'KiekenPicture': {'id': $(this).parent('td').attr('id'), 'description': value}})
 			return returnvalue['KiekenPicture']['description'];
 		},{
 			type: 'text',
@@ -158,16 +164,16 @@
 					foreach($album['KiekenPicture'] as $picture):
 					$count++;
 				?>
-						<td>
-							<h4 class="editable edit_title" id="<?php echo $picture['id']; ?>"><?php echo $picture['title']; ?></h4>
+						<td id="<?php echo $picture['id']; ?>">
+							<h4 class="editable edit_title"><?php echo $picture['title']; ?></h4>
 							<?php echo $html->image(DS.Configure::read('Kieken.uploadDirectory').$picture['KiekenFile']['small']['filename'], array('class' => 'thumbnail', 'id' => $picture['id'],'width' => '200px')); ?>
 							<p class="editable edit_description <?php 
 								if(empty($picture['description'])){
-									echo 'no_description" id="'.$picture['id'].'">';
+									echo 'no_description">';
 									echo __('(no description)', true);	
 								}
 								else {
-									echo '" id="'.$picture['id'].'">'.$picture['description'];
+									echo '">'.$picture['description'];
 									
 								}
 									
@@ -178,7 +184,7 @@
 											'action' => 'delete', 
 											$picture['id'], 
 											'all'), 
-										array('class' => 'delete', 'id' => $picture['id'])); ?></li>
+										array('class' => 'delete')); ?></li>
 								<?php 
 									if($picture['id'] == $album['KiekenAlbum']['thumbnail_picture_id']){
 										$class = 'isalbumthumbnail';
@@ -191,8 +197,8 @@
 											'controller' => 'kieken_pictures',
 											'action' => 'edit',
 											$album['KiekenAlbum']['id']),
-										array('class' => $class, 'id' => $picture['id'])); ?></li>
-							<ul>
+										array('class' => $class)); ?></li>
+							</ul>
 						</td>
 				<?
 						if($count % 4 == 0){

@@ -139,7 +139,6 @@ class KiekenPicturesController extends KiekenAppController {
 		}
 		
 		$picture = $this->KiekenPicture->findById($id);
-		debug($picture);
 
 		# Delete picture and references from all albums
 		if($scope == 'all'){
@@ -164,6 +163,15 @@ class KiekenPicturesController extends KiekenAppController {
 		else {
 			if($this->KiekenPicture->KiekenAlbumsPicture->deleteAll(array('KiekenAlbumsPicture.picture_id' => $id))){
 				
+			}
+		}
+		
+		if(!$this->RequestHandler->isAjax()) {
+			if($album_id){
+				$this->redirect(array('controller'=> 'KiekenAlbums', 'action' => 'view', $album_id));
+			}
+			else {
+				$this->redirect(array('action' => 'index'));
 			}
 		}
 	}
