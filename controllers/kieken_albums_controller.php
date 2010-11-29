@@ -48,26 +48,49 @@ class KiekenAlbumsController extends KiekenAppController {
 		$this->set(compact('albums'));
 	}
 	
-	function admin_view($id = null) {
-		if(!$id && empty($this->data)) {
-			$this->Session->setFlash(__('Invalid content', true));
-			$this->redirect(array('action' => 'index'));
+	function admin_view($id = 'all'){
+		if($id == 'all'){
+			$this->set('title_for_layout', sprintf(__('All pictures', true)));
+			$items = $this->KiekenAlbum->KiekenPicture->find('all');
+			
+			$pictures = array();
+			foreach($items as $item){
+				$picture = $item['KiekenPicture'];
+				$picture['KiekenFile'] = $item['KiekenFile'];
+				$pictures['KiekenPicture'][] = $picture;
+			}
 		}
-		
-		$this->KiekenAlbum->recursive = 3;
-		$album = $this->KiekenAlbum->findById($id);
-		foreach($album['KiekenPicture'] as $pictureKey => $picture) {
-			$album['KiekenPicture'][$pictureKey]['KiekenFile'] = Set::combine($picture['KiekenFile'], '{n}.thumbname', '{n}');
-		}
-
-		if($album) {
-			$this->set('title_for_layout', sprintf(__('Album: %s', true), $album['KiekenAlbum']['title']));
-			$this->set(compact('album'));
+		elseif($id == 'no-album'){
+			$this->set('title_for_layout', sprintf(__('Pictures not in an album', true)));
+			$pictures_in_albums = $this->KiekenAlbum->KiekenAlbumsPicture->find('list', array(
+				'fields' => array('KiekenAlbumsPicture.picture_id')
+			));
+			$items = $this->KiekenAlbum->KiekenPicture->find('all', array(
+				'conditions' => array(
+					'NOT' => array('KiekenPicture.id' => $pictures_in_albums)
+				)
+			));
+			
+			$pictures = array();
+			foreach($items as $item){
+				$picture = $item['KiekenPicture'];
+				$picture['KiekenFile'] = $item['KiekenFile'];
+				$pictures['KiekenPicture'][] = $picture;
+			}
 		}
 		else {
-			$this->Session->setFlash(__('Invalid content', true));
-			$this->redirect(array('action' => 'index'));
+			$this->KiekenAlbum->recursive = 3;
+			$pictures = $this->KiekenAlbum->findById($id);
+			$this->set('title_for_layout', $pictures['KiekenAlbum']['title']);
 		}
+		
+		if($pictures){
+			foreach($pictures['KiekenPicture'] as $pictureKey => $picture) {
+				$pictures['KiekenPicture'][$pictureKey]['KiekenFile'] = Set::combine($picture['KiekenFile'], '{n}.thumbname', '{n}');
+			}
+		}
+		
+		$this->set(compact('pictures', 'id'));
 	}
 	
 	function admin_edit($id = null) {

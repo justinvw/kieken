@@ -61,7 +61,7 @@
 			$rows[] = array(
 				$html->image(DS.Configure::read('Kieken.uploadDirectory').$album['KiekenThumbnail']['KiekenFile']['small']['filename'], array('width' => '100px')),
 				$album['KiekenAlbum']['id'],
-				$html->link($album['KiekenAlbum']['title'], array('action' => 'view', $album['KiekenAlbum']['id'])),
+				$html->link($album['KiekenAlbum']['title'], array('controller' => 'kieken_pictures', 'action' => 'index', 'album_id' => $album['KiekenAlbum']['id'])),
 				$album['KiekenAlbum']['excerpt'],
 				$album['User']['username'],
 				$layout->status($album['KiekenAlbum']['status']),

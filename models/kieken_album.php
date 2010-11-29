@@ -41,5 +41,14 @@ class KiekenAlbum extends KiekenAppModel {
 			'dependent' => false
 		)
 	);
+	
+	/* 
+	* Function returns all albums with the number of images associated with 
+	* them. Currently there is no 'nice' way to do this because counterCache 
+	* is not implemented for HABTM associations
+	* */
+	function albumList(){
+		return $this->query('SELECT `KiekenAlbum`.`id`, `KiekenAlbum`.`title`, `KiekenAlbum`.`thumbnail_picture_id`, count(`KiekenAlbumsPicture`.`picture_id`) AS `count` FROM `kieken_albums` AS `KiekenAlbum` JOIN `kieken_albums_pictures` AS `KiekenAlbumsPicture` ON (`KiekenAlbumsPicture`.`album_id` = `KiekenAlbum`.`id`) GROUP BY `KiekenAlbumsPicture`.`album_id` ORDER BY `KiekenAlbum`.`title`');
+	}
 }
 ?>

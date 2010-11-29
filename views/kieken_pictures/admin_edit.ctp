@@ -1,35 +1,3 @@
-<script type="text/javascript" charset="utf-8">
-	$('#picture-details-popup .submit').click(function(){
-		if($('#picture-details-popup #KiekenPictureStatus').is(':checked')){
-			picturestatus = 1;
-		}
-		else {
-			picturestatus = 0;
-		}
-		
-		var selectedalbums = new Array();
-		$('#picture-details-popup #KiekenAlbum :checked').each(function(){
-			selectedalbums.push($(this).val());
-		});
-
-		options = {
-			'KiekenPicture': {
-				'id': $('#picture-details-popup #KiekenPictureId').val(),
-				'title': $('#picture-details-popup #KiekenPictureTitle').val(),
-				'description': $('#picture-details-popup #KiekenPictureDescription').val(),
-				'licence': $('#picture-details-popup #KiekenPictureLicense').val(),
-				'status': picturestatus,
-				'description': $('#picture-details-popup #KiekenPictureDescription').val(),
-			},
-			'KiekenAlbum': {
-				'KiekenAlbum': selectedalbums
-			}
-		}
-		
-		editPictureDetails(options)
-		return false;
-	});
-</script>
 <div id="picture-details-popup" class="container_13">
 	<div class="grid_6">
 		<?php echo $html->image(DS.Configure::read('Kieken.uploadDirectory').$picture['KiekenFile']['medium']['filename'], array('class' => 'thumbnail', 'width' => '360px')); ?>
@@ -66,6 +34,5 @@
 					echo $form->input('KiekenAlbum.id', array('div' => array('id' => 'KiekenAlbum'), 'label' => 'Albums', 'type' => 'select', 'multiple' => 'checkbox', 'options' => $albums, 'selected' => array_keys($picture['KiekenAlbum'])));
 				?>
 			</fieldset>
-		<?php echo $form->end('Submit'); ?>
 	</div>
 </div>

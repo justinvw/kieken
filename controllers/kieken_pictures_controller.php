@@ -11,13 +11,34 @@ class KiekenPicturesController extends KiekenAppController {
         }
 	}
 	
-	function admin_index() {
+	function admin_index($album = 'all') {
+		$this->set('title_for_layout', sprintf(__('Pictures', true)));
+	}
+	
+	function admin_album_index(){
+		if($this->RequestHandler->isAjax()) {
+			Configure::write('debug', 0);
+		}
 		
+		$albums = $this->KiekenPicture->KiekenAlbum->albumList();
+		
+		$all_pictures_count = $this->KiekenPicture->find('count');
+		
+		$pictures_in_albums = $this->KiekenPicture->KiekenAlbumsPicture->find('list', array(
+			'fields' => array('KiekenAlbumsPicture.picture_id')
+		));
+		$pictures_not_in_albums_count = $this->KiekenPicture->find('count', array(
+			'conditions' => array(
+				'NOT' => array('KiekenPicture.id' => $pictures_in_albums)
+			)
+		));
+		
+		$this->set(compact('albums', 'all_pictures_count', 'pictures_not_in_albums_count'));
 	}
 	
 	function admin_add($album_id = null) {
 		$this->set('title_for_layout', sprintf(__('Upload pictures', true)));
-
+		
 		$albums = $this->KiekenPicture->KiekenAlbum->generatetreelist();
 		
 		$this->set(compact('album_id', 'albums'));

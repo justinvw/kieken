@@ -1,4 +1,7 @@
 /* @override http://localhost/kieken/webroot/kieken/css/kieken_admin.css */
+.kieken h3 {
+	font-size: 18px;
+}
 
 .kieken .editable {
 	padding: 1px 3px;
@@ -17,22 +20,67 @@
 	color: #b5b5b4;	
 }
 
-.kieken #album_photos table, .kieken #album_photos table td {
+.kieken #album_nav .top_nav {
+	float: left;
+	width: 100%;
+}
+
+.kieken #album_nav .top_nav h3 {
+	float: left;
+}
+
+.kieken #album_nav .top_nav a {
+	float: right;
+	padding: 3px;
+}
+
+.kieken #album_nav ul {
+	float: left;
+	width: 100%;
+}
+
+.kieken #album_nav ul#totals {
+	border-bottom: 1px solid #989898;
+}
+
+.kieken #album_nav li a {
+	display: block;
+	padding: 5px;
+	margin: 5px 0;
+	background: #f3f3f3;
+	text-decoration: none;
+}
+
+.kieken #album_nav li a em {
+	font-style: normal;
+	color: #989898;
+}
+
+.kieken #album_nav li a.selected {
+	color: #e47534;
+}
+
+.kieken #pictures_container table, .kieken #pictures_container table td {
 	vertical-align: top;
 	border: none;
 	background: none;
 }
 
-.kieken #album_photos table td img {
+.kieken #pictures_container table td img {
 	cursor: pointer;
 }
 
-.kieken #album_photos ul.actions li {
+.kieken #pictures_container ul.actions li {
 	float: left;
 	font-size: 11px;
 	padding: 5px 10px 5px 0;
 }
 
-.kieken #album_photos ul.actions li a.isalbumthumbnail {
+.kieken #pictures_container ul.actions li a.isalbumthumbnail {
 	display: none;
+}
+
+form#KiekenPictureAdminEditForm #KiekenAlbum .checkbox input {
+	float: left;
+	margin: 6px;
 }
