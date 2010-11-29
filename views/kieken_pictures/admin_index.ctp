@@ -142,10 +142,14 @@
 			type: 'GET',
 			success: function(j){
 				$('#album_nav #album_index').html(j);
+				
 				$('#album_nav #album_index a[href="#'+album+'"]').addClass('selected');
 				$('#album_nav #album_index a').click(function(){
+					$('#album_nav #album_index a').removeClass('selected');
+					$(this).addClass('selected');
+					
 					updatePicturesContainer(this.hash.replace('#', ''));
-
+					
 					return false;
 				});
 			}
@@ -214,7 +218,7 @@
 		else {
 			album = 'all';
 		}
-		updateAlbumNav(album);
+		updateAlbumNav(album);				
 		updatePicturesContainer(album);
 	});
 </script>
