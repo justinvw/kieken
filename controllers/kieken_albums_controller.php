@@ -11,6 +11,45 @@ class KiekenAlbumsController extends KiekenAppController {
         }
 	}
 	
+	function index($album_slug = null){
+		$this->set('title_for_layout', sprintf(__('Albums', true)));
+		$this->KiekenAlbum->recursive = 3;
+		$this->KiekenAlbum->unbindModel(array(
+				'hasAndBelongsToMany' => array('KiekenPicture'),
+			), false
+		);
+	
+		$albums = $this->paginate('KiekenAlbum', array(
+			'KiekenAlbum.status' => 1
+		));
+		
+		foreach($albums as $albumKey => $album) {
+			$albums[$albumKey]['KiekenThumbnail']['KiekenFile'] = Set::combine($album['KiekenThumbnail']['KiekenFile'], '{n}.thumbname', '{n}');
+		}
+		debug($albums);
+		$this->set(compact('albums'));
+	}
+	
+	function view($album_slug = null){
+		$this->KiekenAlbum->recursive = 2;
+		$this->KiekenAlbum->unbindModel(array(
+			'belongsTo' => array('KiekenThumbnail'),
+		));
+		$album = $this->KiekenAlbum->find('first', array(
+			'conditions' => array(
+				'KiekenAlbum.status' => 1,
+				'KiekenAlbum.slug' => $album_slug,
+			)
+		));
+		
+		foreach($album['KiekenPicture'] as $pictureKey => $picture) {
+			$album['KiekenPicture'][$pictureKey]['KiekenFile'] = Set::combine($picture['KiekenFile'], '{n}.thumbname', '{n}');
+		}
+
+		$this->set('title_for_layout', $album['KiekenAlbum']['title']);
+		$this->set(compact('album'));
+	}
+	
 	function admin_index() {
 		$this->set('title_for_layout', sprintf(__('Albums', true)));
 		

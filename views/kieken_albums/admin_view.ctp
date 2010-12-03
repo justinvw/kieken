@@ -1,4 +1,12 @@
 <h3><?php echo $title_for_layout; ?></h3>
+<?php if($id != 'all' && $id != 'no-album'): ?>
+<div class="actions">
+	<ul>
+		<li><?php echo $html->link(__('Upload pictures', true), array('controller' => 'kieken_pictures', 'action' => 'add', $id)); ?></li>
+		<li><?php echo $html->link(__('Edit album', true), array('controller' => 'kieken_albums', 'action' => 'edit', $id)); ?></li>
+	</ul>
+</div>
+<?php endif; ?>
 <?php if(count($pictures['KiekenPicture']) == 0): ?>
 	<div id="no-pictures">
 		<p><?php __('This album does not contain any pictures.'); ?></p>

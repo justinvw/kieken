@@ -34,6 +34,7 @@
 		});
 	
 		uploader.setParams({ album: $('#album').val()});
+		
 		$('#album').change(function(){
 			uploader.setParams({ album: $('#album').val()});
 		});
