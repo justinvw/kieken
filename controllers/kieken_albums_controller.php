@@ -76,7 +76,7 @@ class KiekenAlbumsController extends KiekenAppController {
 			$this->KiekenAlbum->create();
 			if($this->KiekenAlbum->save($this->data)){
 				$this->Session->setFlash(sprintf(__('%s has been saved', true), $this->data['KiekenAlbum']['title']));
-                $this->redirect(array('action' => 'view', $this->KiekenAlbum->id));
+                $this->redirect(array('controller' => 'kieken_pictures', 'action' => 'index', 'album_id' => $this->KiekenAlbum->id));
 			}
 			else {
 				$this->Session->setFlash(sprintf(__('%s could not be saved. Please, try again.', true), $this->data['KiekenAlbum']['title']));
