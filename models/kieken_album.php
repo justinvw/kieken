@@ -48,7 +48,7 @@ class KiekenAlbum extends KiekenAppModel {
 	* is not implemented for HABTM associations
 	* */
 	function albumList(){
-		return $this->query('SELECT `KiekenAlbum`.`id`, `KiekenAlbum`.`title`, `KiekenAlbum`.`thumbnail_picture_id`, count(`KiekenAlbumsPicture`.`picture_id`) AS `count` FROM `kieken_albums` AS `KiekenAlbum` JOIN `kieken_albums_pictures` AS `KiekenAlbumsPicture` ON (`KiekenAlbumsPicture`.`album_id` = `KiekenAlbum`.`id`) GROUP BY `KiekenAlbumsPicture`.`album_id` ORDER BY `KiekenAlbum`.`title`');
+		return $this->query('SELECT `KiekenAlbum`.`id`, `KiekenAlbum`.`title`, `KiekenAlbum`.`thumbnail_picture_id`, count(`KiekenAlbumsPicture`.`picture_id`) AS `count` FROM `kieken_albums` AS `KiekenAlbum` LEFT JOIN `kieken_albums_pictures` AS `KiekenAlbumsPicture` ON (`KiekenAlbumsPicture`.`album_id` = `KiekenAlbum`.`id`) GROUP BY `KiekenAlbumsPicture`.`album_id` ORDER BY `KiekenAlbum`.`title`');
 	}
 }
 ?>
