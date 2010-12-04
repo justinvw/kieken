@@ -11,17 +11,25 @@ class KiekenAlbumsController extends KiekenAppController {
         }
 	}
 	
-	function index($album_slug = null){
+	function index($parent_album_id = null){
 		$this->set('title_for_layout', sprintf(__('Albums', true)));
 		$this->KiekenAlbum->recursive = 3;
 		$this->KiekenAlbum->unbindModel(array(
 				'hasAndBelongsToMany' => array('KiekenPicture'),
 			), false
 		);
-	
-		$albums = $this->paginate('KiekenAlbum', array(
-			'KiekenAlbum.status' => 1
-		));
+		
+		if($parent_album_id){
+			$albums = $this->paginate('KiekenAlbum', array(
+				'KiekenAlbum.status' => 1,
+				'KiekenAlbum.parent_id' => $parent_album_id
+			));
+		}
+		else {
+			$albums = $this->paginate('KiekenAlbum', array(
+				'KiekenAlbum.status' => 1
+			));
+		}
 		
 		foreach($albums as $albumKey => $album) {
 			$albums[$albumKey]['KiekenThumbnail']['KiekenFile'] = Set::combine($album['KiekenThumbnail']['KiekenFile'], '{n}.thumbname', '{n}');
@@ -162,7 +170,7 @@ class KiekenAlbumsController extends KiekenAppController {
 				$this->KiekenAlbum->id = $id;
 				if($this->KiekenAlbum->save($this->data)) {
 					$this->Session->setFlash(sprintf(__('%s has been saved', true), $album['KiekenAlbum']['title']));
-	                $this->redirect(array('action' => 'view', $id));
+	                $this->redirect(array('controller' => 'kieken_pictures', 'action' => 'index', 'album_id' => $id));	                
 				}
 				else {
 					$this->Session->setFlash(sprintf(__('%s could not be saved. Please, try again.', true), $album['KiekenAlbum']['title']));
