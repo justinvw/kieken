@@ -82,6 +82,18 @@ class KiekenPicturesController extends KiekenAppController {
 		$this->data['KiekenAlbum']['id'] = $this->params['url']['album'];
 		$this->KiekenPicture->save($this->data);
 		
+		// If there is no thumbnail picture assigned to the album, use this picture as thumbnail
+		$album = $this->KiekenPicture->KiekenAlbum->find('first', array(
+			'conditions' => array(
+				'KiekenAlbum.id' => $this->params['url']['album'],
+				'KiekenAlbum.thumbnail_picture_id' => null
+			)
+		));
+		if($album){
+			$this->KiekenPicture->KiekenAlbum->id = $this->params['url']['album'];
+			$this->KiekenPicture->KiekenAlbum->saveField('thumbnail_picture_id', $this->KiekenPicture->id);
+		}
+		
 		// Generate thumbnails
 		foreach(Configure::read('Kieken.thumbnails') as $thumbnail) {
 			$thumbnailFilename = String::uuid().'.'.$uploadInfo['extension'];
@@ -141,7 +153,6 @@ class KiekenPicturesController extends KiekenAppController {
 			$this->set(compact('picture', 'albums'));
 		}
 		else {
-			debug($this->data);
 			$this->KiekenPicture->id = $this->data['KiekenPicture']['id'];
 			if($this->KiekenPicture->save($this->data)){
 				if($this->RequestHandler->isAjax()){
@@ -160,7 +171,13 @@ class KiekenPicturesController extends KiekenAppController {
 		}
 		
 		$picture = $this->KiekenPicture->findById($id);
-
+		
+		# Get list of albums that use is picture as thumbnail
+		$albums = $this->KiekenPicture->KiekenAlbum->find('list', array(
+			'fields' => array('KiekenAlbum.id'),
+			'conditions' => array('KiekenAlbum.thumbnail_picture_id' => $id)
+		));
+		
 		# Delete picture and references from all albums
 		if($scope == 'all'){
 			if($this->KiekenPicture->delete($id, true)){
@@ -169,21 +186,36 @@ class KiekenPicturesController extends KiekenAppController {
 					unlink(WWW_ROOT.Configure::read('Kieken.uploadDirectory').$imageFile['filename']);
 				}
 				
-				
+				# Select new pictures for albums that used this picture as thumbnail
+				foreach($albums as $album_id){
+					$album = $this->KiekenPicture->KiekenAlbum->findById($album_id);
+					$this->KiekenPicture->KiekenAlbum->id = $album_id;
+					$this->KiekenPicture->KiekenAlbum->saveField('thumbnail_picture_id', $album['KiekenPicture'][0]['id']);
+				}
 			}
 		}
 		
 		# Delete picture reference from certain album ($album_id)
 		elseif($scope == 'album'){
 			if($this->KiekenPicture->KiekenAlbumsPicture->deleteAll(array('KiekenAlbumsPicture.album_id' => $album_id, 'KiekenAlbumsPicture.picture_id' => $id))){
-				
+				# If album in list of albums that use the picture as thumbnail, select other picture in album as thumbnail
+				if(in_array($album_id, $albums)){
+					$album = $this->KiekenPicture->KiekenAlbum->findById($album_id);
+					$this->KiekenPicture->KiekenAlbum->id = $album_id;
+					$this->KiekenPicture->KiekenAlbum->saveField('thumbnail_picture_id', $album['KiekenPicture'][0]['id']);
+				}
 			}
 		}
 		
 		# Delete picture references from all albums, but keep the picture itself
 		else {
 			if($this->KiekenPicture->KiekenAlbumsPicture->deleteAll(array('KiekenAlbumsPicture.picture_id' => $id))){
-				
+				# Select new pictures for albums that used this picture as thumbnail
+				foreach($albums as $album_id){
+					$album = $this->KiekenPicture->KiekenAlbum->findById($album_id);
+					$this->KiekenPicture->KiekenAlbum->id = $album_id;
+					$this->KiekenPicture->KiekenAlbum->saveField('thumbnail_picture_id', $album['KiekenPicture'][0]['id']);
+				}
 			}
 		}
 		
