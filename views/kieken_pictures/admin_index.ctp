@@ -90,7 +90,7 @@
 					editPictureDetails(options);
 					$(dialog).dialog('close').empty().remove();
 					updateAlbumNav();
-					updatePicturesContainer($('#pictures_container div').attr('id'));
+					updatePicturesContainer($('#pictures_container div.pictures').attr('id'));
 				},
 				'Cancel' : function(){
 					$(dialog).dialog('close').empty().remove();
@@ -165,12 +165,12 @@
 				$('#pictures_container').html(j);
 				
 				$('a.delete').click(function(){
-					removePicture($(this).parent('li').parent('ul').parent('td').attr('id'), $('#pictures_container div').attr('id'));
+					removePicture($(this).parent('li').parent('ul').parent('td').attr('id'), $('#pictures_container div.pictures').attr('id'));
 					return false;
 				});
 				
 				$('a.setasalbumthumbnail').live('click', function(){
-					setAsAlbumThumbnail($(this).parent('li').parent('ul').parent('td').attr('id'), $('#pictures_container div').attr('id'));
+					setAsAlbumThumbnail($(this).parent('li').parent('ul').parent('td').attr('id'), $('#pictures_container div.pictures').attr('id'));
 
 					// Remove 'isalbumthumbnail' class from current thumbnail
 					$('a.isalbumthumbnail').removeClass('isalbumthumbnail').addClass('setasalbumthumbnail');

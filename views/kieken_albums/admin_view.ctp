@@ -12,7 +12,7 @@
 		<p><?php __('This album does not contain any pictures.'); ?></p>
 	</div>
 <?php else: ?>
-<div id="<?php echo $id; ?>">
+<div class="pictures" id="<?php echo $id; ?>">
 	<table>
 		<tbody>
 			<tr>
