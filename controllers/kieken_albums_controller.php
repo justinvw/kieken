@@ -34,7 +34,7 @@ class KiekenAlbumsController extends KiekenAppController {
 		foreach($albums as $albumKey => $album) {
 			$albums[$albumKey]['KiekenThumbnail']['KiekenFile'] = Set::combine($album['KiekenThumbnail']['KiekenFile'], '{n}.thumbname', '{n}');
 		}
-		debug($albums);
+
 		$this->set(compact('albums'));
 	}
 	

@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS `kieken_albums`;
-CREATE TABLE IF NOT EXISTS `kieken_albums` (
+CREATE TABLE `kieken_albums` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
   `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -16,19 +16,17 @@ CREATE TABLE IF NOT EXISTS `kieken_albums` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug_UNIQUE` (`slug`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
--- --------------------------------------------------------
 
 DROP TABLE IF EXISTS `kieken_albums_pictures`;
-CREATE TABLE IF NOT EXISTS `kieken_albums_pictures` (
+CREATE TABLE `kieken_albums_pictures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `album_id` int(11) NOT NULL,
   `picture_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=103 ;
--- --------------------------------------------------------
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `kieken_files`;
-CREATE TABLE IF NOT EXISTS `kieken_files` (
+CREATE TABLE `kieken_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `picture_id` int(11) NOT NULL,
   `width` int(6) NOT NULL,
@@ -39,19 +37,18 @@ CREATE TABLE IF NOT EXISTS `kieken_files` (
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `filename_UNIQUE` (`filename`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
--- --------------------------------------------------------
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `kieken_pictures`;
-CREATE TABLE IF NOT EXISTS `kieken_pictures` (
+CREATE TABLE `kieken_pictures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `license` smallint(6) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `promote` tinyint(1) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `updated` datetime NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
--- --------------------------------------------------------

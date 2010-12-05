@@ -30,6 +30,7 @@
 					echo $form->input('title');
 					echo $form->input('description');
 					echo $form->input('license', array('label' => 'Licence information'));
+					echo $form->input('promote');
 					echo $form->input('status');
 					echo $form->input('KiekenAlbum.id', array('div' => array('id' => 'KiekenAlbum'), 'label' => 'Albums', 'type' => 'select', 'multiple' => 'checkbox', 'options' => $albums, 'selected' => array_keys($picture['KiekenAlbum'])));
 				?>

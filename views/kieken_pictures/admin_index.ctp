@@ -61,6 +61,13 @@
 			},
 			buttons: {
 				'Save image details' : function(){
+					if($('#picture-details-popup #KiekenPicturePromote').is(':checked')){
+						picturepromote = 1;
+					}
+					else {
+						picturepromote = 0;
+					}
+					
 					if($('#picture-details-popup #KiekenPictureStatus').is(':checked')){
 						picturestatus = 1;
 					}
@@ -79,6 +86,7 @@
 							'title': $('#picture-details-popup #KiekenPictureTitle').val(),
 							'description': $('#picture-details-popup #KiekenPictureDescription').val(),
 							'licence': $('#picture-details-popup #KiekenPictureLicense').val(),
+							'promote': picturepromote,
 							'status': picturestatus,
 							'description': $('#picture-details-popup #KiekenPictureDescription').val(),
 						},
