@@ -6,9 +6,22 @@ class KiekenActivation {
 
 	public function onActivation(&$controller) {
 		// ACL: set ACOs with permissions
-		#$controller->Croogo->addAco('Example'); // ExampleController
-		#$controller->Croogo->addAco('Example/admin_index'); // ExampleController::admin_index()
-		#$controller->Croogo->addAco('Example/index', array('registered', 'public')); // ExampleController::index()
+		$controller->Croogo->addAco('KiekenAlbums');
+		$controller->Croogo->addAco('KiekenAlbums/admin_index');
+		$controller->Croogo->addAco('KiekenAlbums/admin_add');
+		$controller->Croogo->addAco('KiekenAlbums/admin_view');
+		$controller->Croogo->addAco('KiekenAlbums/admin_edit');
+		$controller->Croogo->addAco('KiekenAlbums/admin_delete');
+		$controller->Croogo->addAco('KiekenAlbums/index', array('registered', 'public'));
+		$controller->Croogo->addAco('KiekenAlbums/view', array('registered', 'public'));
+		
+		$controller->Croogo->addAco('KiekenPictures');
+		$controller->Croogo->addAco('KiekenPictures/admin_index');
+		$controller->Croogo->addAco('KiekenPictures/admin_album_index');
+		$controller->Croogo->addAco('KiekenPictures/admin_add');
+		$controller->Croogo->addAco('KiekenPictures/admin_edit');
+		$controller->Croogo->addAco('KiekenPictures/admin_delete');
+		$controller->Croogo->addAco('KiekenPictures/admin_upload');
 
 		// Main menu: add an Example link
 		#$mainMenu = $controller->Link->Menu->findByAlias('main');
@@ -31,7 +44,8 @@ class KiekenActivation {
 
 	public function onDeactivation(&$controller) {
 		// ACL: remove ACOs with permissions
-		#$controller->Croogo->removeAco('Example'); // ExampleController ACO and it's actions will be removed
+		$controller->Croogo->removeAco('KiekenAlbums');
+		$controller->Croogo->removeAco('KiekenPicutres');
 
 		// Main menu: delete Example link
 		#$link = $controller->Link->find('first', array(
