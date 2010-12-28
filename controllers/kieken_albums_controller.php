@@ -247,7 +247,7 @@ class KiekenAlbumsController extends KiekenAppController {
 		}
 	}
 	
-	function admin_move($id, $step = 1, $direction = 'up'){
+	function admin_move($id, $direction = 'up', $step = 1){
 		$album = $this->KiekenAlbum->findById($id);
 		if(!isset($album['KiekenAlbum']['id'])){
             $this->Session->setFlash(__('Invalid id for Album', true), 'default', array('class' => 'error'));
@@ -256,9 +256,9 @@ class KiekenAlbumsController extends KiekenAppController {
 				'action' => 'index',
  			));
 		}
-		
+		$this->KiekenAlbum->Behaviors->attach('Tree');
 		if($direction == 'up'){
-			if($this->KiekenAlbum->moveup($id, $step)){
+			if($this->KiekenAlbum->moveup($id, 1)){
 				$this->Session->setFlash(__('Moved up successfully', true), 'default', array('class' => 'success'));
 			}
 			else {
@@ -266,7 +266,7 @@ class KiekenAlbumsController extends KiekenAppController {
 			}
 		}
 		elseif($direction == 'down'){
-			if($this->KiekenAlbum->movedown($id, $step)){
+			if($this->KiekenAlbum->movedown($id, 1)){
 				$this->Session->setFlash(__('Moved down successfully', true), 'default', array('class' => 'success'));
 			}
 			else {

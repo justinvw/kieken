@@ -56,8 +56,8 @@
 		
 		foreach($albumsTree AS $albumId => $albumName) {
 			$actions = $html->link(__('Edit', true), array('action' => 'edit', $albumId));
-			$actions .= ' '.$html->link(__('Move up', true), array('action' => 'move', $albumId, 1, 'up'));
-			$actions .= ' '.$html->link(__('Move down', true), array('action' => 'move', $albumId, 1, 'down'));
+			$actions .= ' '.$html->link(__('Move up', true), array('action' => 'move', $albumId, 'up'));
+			$actions .= ' '.$html->link(__('Move down', true), array('action' => 'move', $albumId, 'down'));
 			$actions .= ' '.$html->link(__('Delete', true), array('action' => 'delete', $albums[$albumId]['KiekenAlbum']['id']), array('class' => 'delete', 'id' => $albums[$albumId]['KiekenAlbum']['id']));
 			
 			$rows[] = array(
