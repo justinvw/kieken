@@ -24,18 +24,26 @@ class KiekenAlbumsController extends KiekenAppController {
 				'KiekenAlbum.status' => 1,
 				'KiekenAlbum.parent_id' => $parent_album_id
 			));
+			$albumsTree = $this->KiekenAlbum->generatetreelist( array(
+				'KiekenAlbum.status' => 1,
+				'KiekenAlbum.parent_id' => $parent_album_id
+			));
 		}
 		else {
 			$albums = $this->paginate('KiekenAlbum', array(
 				'KiekenAlbum.status' => 1
 			));
+			$albumsTree = $this->KiekenAlbum->generatetreelist( array(
+				'KiekenAlbum.status' => 1
+			));
 		}
 		
+		$albums = Set::combine($albums, '{n}.KiekenAlbum.id', '{n}');
 		foreach($albums as $albumKey => $album) {
 			$albums[$albumKey]['KiekenThumbnail']['KiekenFile'] = Set::combine($album['KiekenThumbnail']['KiekenFile'], '{n}.thumbname', '{n}');
 		}
-
-		$this->set(compact('albums'));
+		
+		$this->set(compact('albums', 'albumsTree'));
 	}
 	
 	function view($album_slug = null){
@@ -53,7 +61,7 @@ class KiekenAlbumsController extends KiekenAppController {
 		foreach($album['KiekenPicture'] as $pictureKey => $picture) {
 			$album['KiekenPicture'][$pictureKey]['KiekenFile'] = Set::combine($picture['KiekenFile'], '{n}.thumbname', '{n}');
 		}
-
+				
 		$this->set('title_for_layout', $album['KiekenAlbum']['title']);
 		$this->set(compact('album'));
 	}
@@ -68,11 +76,15 @@ class KiekenAlbumsController extends KiekenAppController {
 		);
 		
 		$albums = $this->paginate('KiekenAlbum');
+		
+		$albums = Set::combine($albums, '{n}.KiekenAlbum.id', '{n}');
 		foreach($albums as $albumKey => $album) {
 			$albums[$albumKey]['KiekenThumbnail']['KiekenFile'] = Set::combine($album['KiekenThumbnail']['KiekenFile'], '{n}.thumbname', '{n}');
 		}
 		
-		$this->set(compact('albums'));
+		$albumsTree = $this->KiekenAlbum->generatetreelist();
+
+		$this->set(compact('albums', 'albumsTree'));
 	}
 	
 	function admin_add() {
@@ -231,6 +243,36 @@ class KiekenAlbumsController extends KiekenAppController {
 				}
 			}
 		}
+	}
+	
+	function admin_move($id, $step = 1, $direction = 'up'){
+		$album = $this->KiekenAlbum->findById($id);
+		if(!isset($album['KiekenAlbum']['id'])){
+            $this->Session->setFlash(__('Invalid id for Album', true), 'default', array('class' => 'error'));
+            $this->redirect(array(
+				'controller' => 'kiekenalbums',
+				'action' => 'index',
+ 			));
+		}
+		
+		if($direction == 'up'){
+			if($this->KiekenAlbum->moveup($id, $step)){
+				$this->Session->setFlash(__('Moved up successfully', true), 'default', array('class' => 'success'));
+			}
+			else {
+				$this->Session->setFlash(__('Could not move up', true), 'default', array('class' => 'error'));
+			}
+		}
+		elseif($direction == 'down'){
+			if($this->KiekenAlbum->movedown($id, $step)){
+				$this->Session->setFlash(__('Moved down successfully', true), 'default', array('class' => 'success'));
+			}
+			else {
+				$this->Session->setFlash(__('Could not move down', true), 'default', array('class' => 'error'));
+			}
+		}
+		
+		$this->redirect(array('action' => 'index'));
 	}
 }
 ?>

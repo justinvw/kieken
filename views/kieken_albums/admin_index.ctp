@@ -54,18 +54,20 @@
 		
 		$rows = array();
 		
-		foreach($albums AS $album) {
-			$actions = $html->link(__('Edit', true), array('action' => 'edit', $album['KiekenAlbum']['id']));
-			$actions .= ' '.$html->link(__('Delete', true), array('action' => 'delete', $album['KiekenAlbum']['id']), array('class' => 'delete', 'id' => $album['KiekenAlbum']['id']));
+		foreach($albumsTree AS $albumId => $albumName) {
+			$actions = $html->link(__('Edit', true), array('action' => 'edit', $albumId));
+			$actions .= ' '.$html->link(__('Move up', true), array('action' => 'move', $albumId, 1, 'up'));
+			$actions .= ' '.$html->link(__('Move down', true), array('action' => 'move', $albumId, 1, 'down'));
+			$actions .= ' '.$html->link(__('Delete', true), array('action' => 'delete', $albums[$albumId]['KiekenAlbum']['id']), array('class' => 'delete', 'id' => $albums[$albumId]['KiekenAlbum']['id']));
 			
 			$rows[] = array(
-				$html->image(DS.Configure::read('Kieken.uploadDirectory').$album['KiekenThumbnail']['KiekenFile']['small']['filename'], array('width' => '100px')),
-				$album['KiekenAlbum']['id'],
-				$html->link($album['KiekenAlbum']['title'], array('controller' => 'kieken_pictures', 'action' => 'index', 'album_id' => $album['KiekenAlbum']['id'])),
-				$album['KiekenAlbum']['excerpt'],
-				$album['User']['username'],
-				$layout->status($album['KiekenAlbum']['status']),
-				$album['KiekenAlbum']['created'],
+				$html->image(DS.Configure::read('Kieken.uploadDirectory').$albums[$albumId]['KiekenThumbnail']['KiekenFile']['small']['filename'], array('width' => '100px')),
+				$albums[$albumId]['KiekenAlbum']['id'],
+				$html->link($albumName, array('controller' => 'kieken_pictures', 'action' => 'index', 'album_id' => $albums[$albumId]['KiekenAlbum']['id'])),
+				$albums[$albumId]['KiekenAlbum']['excerpt'],
+				$albums[$albumId]['User']['username'],
+				$layout->status($albums[$albumId]['KiekenAlbum']['status']),
+				$albums[$albumId]['KiekenAlbum']['created'],
 				$actions
 			);
 		}

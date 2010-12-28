@@ -11,6 +11,7 @@ class KiekenActivation {
 		$controller->Croogo->addAco('KiekenAlbums/admin_add');
 		$controller->Croogo->addAco('KiekenAlbums/admin_view');
 		$controller->Croogo->addAco('KiekenAlbums/admin_edit');
+		$controller->Croogo->addAco('KiekenAlbums/admin_move');
 		$controller->Croogo->addAco('KiekenAlbums/admin_delete');
 		$controller->Croogo->addAco('KiekenAlbums/index', array('registered', 'public'));
 		$controller->Croogo->addAco('KiekenAlbums/view', array('registered', 'public'));
