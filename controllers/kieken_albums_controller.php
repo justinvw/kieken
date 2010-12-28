@@ -25,7 +25,7 @@ class KiekenAlbumsController extends KiekenAppController {
 				'KiekenAlbum.parent_id' => $parent_album_id
 			));
 			$albumsTree = $this->KiekenAlbum->generatetreelist( array(
-				'KiekenAlbum.status' => 1,
+				'KiekenAlbums.id' => array_keys($albums),
 				'KiekenAlbum.parent_id' => $parent_album_id
 			));
 		}
@@ -33,12 +33,14 @@ class KiekenAlbumsController extends KiekenAppController {
 			$albums = $this->paginate('KiekenAlbum', array(
 				'KiekenAlbum.status' => 1
 			));
-			$albumsTree = $this->KiekenAlbum->generatetreelist( array(
-				'KiekenAlbum.status' => 1
+			
+			$albums = Set::combine($albums, '{n}.KiekenAlbum.id', '{n}');
+			
+			$albumsTree = $this->KiekenAlbum->generatetreelist(array(
+				'KiekenAlbums.id' => array_keys($albums)
 			));
 		}
 		
-		$albums = Set::combine($albums, '{n}.KiekenAlbum.id', '{n}');
 		foreach($albums as $albumKey => $album) {
 			$albums[$albumKey]['KiekenThumbnail']['KiekenFile'] = Set::combine($album['KiekenThumbnail']['KiekenFile'], '{n}.thumbname', '{n}');
 		}
@@ -82,7 +84,7 @@ class KiekenAlbumsController extends KiekenAppController {
 			$albums[$albumKey]['KiekenThumbnail']['KiekenFile'] = Set::combine($album['KiekenThumbnail']['KiekenFile'], '{n}.thumbname', '{n}');
 		}
 		
-		$albumsTree = $this->KiekenAlbum->generatetreelist();
+		$albumsTree = $this->KiekenAlbum->generatetreelist(array('KiekenAlbum.id' => array_keys($albums)));
 
 		$this->set(compact('albums', 'albumsTree'));
 	}
