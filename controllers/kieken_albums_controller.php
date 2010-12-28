@@ -24,8 +24,11 @@ class KiekenAlbumsController extends KiekenAppController {
 				'KiekenAlbum.status' => 1,
 				'KiekenAlbum.parent_id' => $parent_album_id
 			));
+			
+			$albums = Set::combine($albums, '{n}.KiekenAlbum.id', '{n}');
+			
 			$albumsTree = $this->KiekenAlbum->generatetreelist( array(
-				'KiekenAlbums.id' => array_keys($albums),
+				'KiekenAlbumsid' => array_keys($albums),
 				'KiekenAlbum.parent_id' => $parent_album_id
 			));
 		}
