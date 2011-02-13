@@ -47,6 +47,7 @@ CREATE TABLE `kieken_pictures` (
   `license` smallint(6) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `promote` tinyint(1) NOT NULL DEFAULT '0',
+  `downloadable` tinyint(1) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `updated` datetime NOT NULL,
   `created` datetime NOT NULL,
