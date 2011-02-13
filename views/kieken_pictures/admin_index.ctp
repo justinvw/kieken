@@ -68,6 +68,13 @@
 						picturepromote = 0;
 					}
 					
+					if($('#picture-details-popup #KiekenPictureDownloadable').is(':checked')){
+						picturedownloadable = 1;
+					}
+					else {
+						picturedownloadable = 0;
+					}
+					
 					if($('#picture-details-popup #KiekenPictureStatus').is(':checked')){
 						picturestatus = 1;
 					}
@@ -87,6 +94,7 @@
 							'description': $('#picture-details-popup #KiekenPictureDescription').val(),
 							'licence': $('#picture-details-popup #KiekenPictureLicense').val(),
 							'promote': picturepromote,
+							'downloadable': picturedownloadable,
 							'status': picturestatus,
 							'description': $('#picture-details-popup #KiekenPictureDescription').val(),
 						},
