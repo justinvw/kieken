@@ -2,6 +2,8 @@
 	Croogo::hookRoutes('Kieken');
 	#Croogo::hookBehavior('Node', 'Example.Example', array());
 	#Croogo::hookComponent('*', 'Kieken.Kieken');
+	Croogo::hookComponent('Nodes', 'Kieken.KiekenFeatured');
+	Croogo::hookComponent('Dolfify.Frontpage', 'Kieken.KiekenFeatured');
 	#Croogo::hookHelper('Nodes', 'Example.Example');
 	Croogo::hookAdminMenu('Kieken');
 	#Croogo::hookAdminRowAction('Nodes/admin_index', 'Example', 'plugin:example/controller:example/action:index/:id');
